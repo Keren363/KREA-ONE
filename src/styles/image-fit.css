@@ -1,0 +1,2 @@
+/* Fotos de producto: prioridad a la prenda completa, no a un recorte editorial. */
+.product-card__image img,.product-gallery>img,.gallery-thumbs img{object-fit:contain;object-position:center;background:#f5f5f5}

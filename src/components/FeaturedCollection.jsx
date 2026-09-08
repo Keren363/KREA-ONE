@@ -1,0 +1,2 @@
+import { products } from '../data/content'; import ProductCard from './ProductCard'
+export default function FeaturedCollection() { return <section className="collection section" id="shop"><div className="section-heading reveal"><p className="eyebrow">PASTEL DOLLY / DROP 001</p><h2>NUEVO<br /><em>EN KREA.</em></h2><a href="/collections/pastel-dolly" className="text-link">VER EL DROP <span>↗</span></a></div><div className="product-grid">{products.slice(0, 5).map(product => <ProductCard product={product} key={product.id} />)}</div></section> }
