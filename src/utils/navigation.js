@@ -1,7 +1,8 @@
 export function navigate(href) {
-  if (window.location.pathname === href) return
-  window.history.pushState({}, '', href)
-  window.dispatchEvent(new PopStateEvent('popstate'))
+  const path = href.startsWith('/') ? href : `/${href}`
+  const hash = `#${path}`
+  if (window.location.hash === hash) return
+  window.location.hash = path
 }
 
 export function handleInternalNavigation(event, href) {
