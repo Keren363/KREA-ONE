@@ -12,6 +12,7 @@ import './styles/contact.css'
 import './styles/sets-and-filters.css'
 import './styles/interaction.css'
 import './styles/men.css'
+import './styles/responsive.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode><App /></StrictMode>,
