@@ -12,3 +12,7 @@ const paths = {
 export default function Icon({ name, size = 18 }) {
   return <svg className={`icon icon--${name}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{paths[name]}</svg>
 }
+
+export function ArrowUpRightIcon() {
+  return <Icon name="arrow-up-right" size={16} />
+}
