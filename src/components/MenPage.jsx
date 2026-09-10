@@ -1,3 +1,4 @@
+import Icon from './Icon'
 export default function MenPage() {
   return <main className="men-page">
     <div className="men-page__content">
@@ -9,7 +10,7 @@ export default function MenPage() {
       </div>
       <p className="men-page__status">COLECCIÓN EN PROCESO</p>
       <p className="men-page__motto">CREATE. BUILD. BECOME.</p>
-      <a className="button" href="/shop">VER COLECCIÓN MUJER <span>↗</span></a>
+      <a className="button" href="/shop">VER COLECCIÓN MUJER <Icon name="arrow-up-right" /></a>
     </div>
   </main>
 }

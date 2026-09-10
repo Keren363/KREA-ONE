@@ -1,5 +1,39 @@
 /* Responsive layout overrides: the mobile composition remains the baseline. */
 img { max-width: 100%; }
+html { -webkit-text-size-adjust:100%; }
+button,
+input,
+textarea { appearance:none; -webkit-appearance:none; border-radius:0; }
+.icon { display:inline-block; flex:none; vertical-align:middle; }
+.button .icon,
+.text-link .icon,
+.back-link .icon { width:17px; height:17px; }
+.text-link > span { display:none; }
+.text-link::after { content:''; width:16px; height:16px; flex:none; background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2311110f' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 15 15 5M8 5h7v7'/%3E%3C/svg%3E"); }
+.text-link:has(.icon)::after { display:none; }
+.back-link { display:inline-flex; align-items:center; gap:8px; }
+.menu-button .icon { width:20px; height:20px; }
+.filter-menu > button span { display:inline-grid; width:16px; height:16px; margin-left:6px; font-size:0; place-items:center; vertical-align:middle; }
+.filter-menu > button span::after { content:''; width:14px; height:14px; background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2311110f' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+.filter-menu > button[aria-expanded='true'] span::after { transform:rotate(180deg); }
+.cart-drawer header button,
+.cart-notice button,
+.filter-sheet__head button { display:grid; width:40px; height:40px; padding:0; font-size:0; place-items:center; }
+.cart-drawer header button::after,
+.cart-notice button::after,
+.filter-sheet__head button::after { content:''; width:18px; height:18px; background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2311110f' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='m6 6 12 12M18 6 6 18'/%3E%3C/svg%3E"); }
+
+@media (max-width:699px) {
+  .header { padding-top:env(safe-area-inset-top); height:calc(62px + env(safe-area-inset-top)); }
+  .header-actions { display:flex; grid-column:3; justify-self:end; align-items:center; min-width:40px; }
+  .header .cart { display:flex; justify-content:flex-end; min-width:40px; min-height:40px; }
+  .nav.nav--open { top:calc(61px + env(safe-area-inset-top)); }
+  .mobile-add { padding-bottom:env(safe-area-inset-bottom); }
+  .filter-sheet { padding-bottom:calc(18px + env(safe-area-inset-bottom)); }
+  .cart-drawer footer { padding-bottom:calc(22px + env(safe-area-inset-bottom)); }
+  .checkout-form input,
+  .checkout-form textarea { font-size:16px; }
+}
 
 @media (min-width:700px) and (max-width:959px) {
   .header { height:62px; padding:0 18px; }

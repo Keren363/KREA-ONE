@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { formatPrice, getProduct, getProductById, sets } from '../data/content'
 import { useShop } from '../store/ShopContext'
 import ProductCard from './ProductCard'
+import Icon from './Icon'
 
 export default function ProductPage({ slug }) {
   const product = getProduct(slug)
@@ -16,9 +17,8 @@ export default function ProductPage({ slug }) {
   const set = product.set && sets.find(item => item.id === product.set)
   const changeColor = next => { setColorId(next); setSize(null); setImageIndex(0) }
   const buttonLabel = !colorId ? 'SELECCIONA COLOR' : !size ? 'SELECCIONA TALLA' : 'AGREGAR AL CARRITO'
-
   return <main className="product-page">
-    <a href="/" className="back-link">← VOLVER A SHOP</a>
+    <a href="/" className="back-link"><Icon name="arrow-left" /> VOLVER A SHOP</a>
     <div className="product-layout">
       <div className={`product-gallery ${!gallery.length ? 'product-gallery--pending' : ''}`}>
         {gallery.length ? <><img src={gallery[imageIndex]} alt={`${product.name} ${variant.colorName}`} /><p className="gallery-count">{imageIndex + 1} / {gallery.length}</p><div className="gallery-dots">{gallery.map((_, index) => <button className={index === imageIndex ? 'active' : ''} onClick={() => setImageIndex(index)} aria-label={`Ver imagen ${index + 1}`} key={index}></button>)}</div><div className="gallery-thumbs">{gallery.map((src, index) => <button onClick={() => setImageIndex(index)} className={index === imageIndex ? 'active' : ''} key={src}><img src={src} alt="" /></button>)}</div></> : <p>FOTOGRAFÍA DE PRODUCTO<br />PRÓXIMAMENTE</p>}
@@ -29,7 +29,7 @@ export default function ProductPage({ slug }) {
         <div className="product-option"><div className="option-row"><p>TALLA</p><details className="size-guide"><summary>GUÍA DE TALLAS</summary><p>Las medidas exactas serán publicadas al confirmar la guía del proveedor. Para ayuda inmediata, contáctanos por WhatsApp.</p></details></div><div className="sizes">{Object.keys(variant.sizes).map(item => <button className={item === size ? 'selected' : ''} onClick={() => setSize(item)} key={item}>{item}</button>)}</div></div>
         <p className="stock-message">{!colorId ? 'SELECCIONA UN COLOR' : !size ? 'SELECCIONA UNA TALLA' : ''}</p>
         <div className="mobile-add"><button className="add-button" disabled={!colorId || !size} onClick={() => addToCart(product, colorId, size)}>{buttonLabel}</button></div>
-        {set && <div className="set-action"><p className="eyebrow">COMPLETA EL LOOK</p><p>{set.name}</p><a className="text-link" href={`/sets/${set.slug}`}>COMPRAR EL SET <span>↗</span></a></div>}
+        {set && <div className="set-action"><p className="eyebrow">COMPLETA EL LOOK</p><p>{set.name}</p><a className="text-link" href={`/sets/${set.slug}`}>COMPRAR EL SET <Icon name="arrow-up-right" /></a></div>}
         <div className="product-copy"><dl><div><dt>DESCRIPCIÓN</dt><dd>{product.description}</dd></div><div><dt>ENVÍO</dt><dd>Gratis en todo Grecia. Fuera de Grecia, el costo se confirma por WhatsApp.</dd></div></dl></div>
       </section>
     </div>
