@@ -78,7 +78,8 @@ export function ShopProvider({ children }) {
 
   const getVariantStock = useCallback((productId, colorId, size) => {
     if (!inventoryReady) return null
-    return inventory[stockKey(productId, colorId, size)] ?? 0
+    const key = stockKey(productId, colorId, size)
+    return Object.hasOwn(inventory, key) ? inventory[key] : undefined
   }, [inventory, inventoryReady])
 
   const reservedQuantity = useCallback((productId, colorId, size, excludedLineKey) => cart.reduce((total, line) => {
@@ -88,7 +89,7 @@ export function ShopProvider({ children }) {
 
   const getAvailableQuantity = useCallback((productId, colorId, size, excludedLineKey) => {
     const stock = getVariantStock(productId, colorId, size)
-    if (stock === null) return null
+    if (stock === null || stock === undefined) return null
     return Math.max(0, stock - reservedQuantity(productId, colorId, size, excludedLineKey))
   }, [getVariantStock, reservedQuantity])
 

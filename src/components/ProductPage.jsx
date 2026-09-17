@@ -6,7 +6,7 @@ import Icon from './Icon'
 
 export default function ProductPage({ slug }) {
   const product = getProduct(slug)
-  const { addToCart, getVariantStock, inventoryReady } = useShop()
+  const { addToCart, getVariantStock, inventoryReady, inventoryError } = useShop()
   const [colorId, setColorId] = useState(product?.variants[0]?.colorId ?? null)
   const [size, setSize] = useState(null)
   const [imageIndex, setImageIndex] = useState(0)
@@ -19,7 +19,7 @@ export default function ProductPage({ slug }) {
   const set = product.set && sets.find((item) => item.id === product.set)
   const selectedStock = size ? getVariantStock(product.id, variant.colorId, size) : null
   const changeColor = (next) => { setColorId(next); setSize(null); setImageIndex(0) }
-  const buttonLabel = !inventoryReady ? 'CARGANDO DISPONIBILIDAD' : !colorId ? 'SELECCIONA COLOR' : !size ? 'SELECCIONA TALLA' : selectedStock < 1 ? 'AGOTADO' : 'AGREGAR AL CARRITO'
+  const buttonLabel = !inventoryReady ? inventoryError ? 'DISPONIBILIDAD NO DISPONIBLE' : 'CARGANDO DISPONIBILIDAD' : !colorId ? 'SELECCIONA COLOR' : !size ? 'SELECCIONA TALLA' : selectedStock === 0 ? 'AGOTADO' : 'AGREGAR AL CARRITO'
 
   return <main className="product-page">
     <a href="/" className="back-link"><Icon name="arrow-left" /> VOLVER A SHOP</a>
@@ -30,9 +30,9 @@ export default function ProductPage({ slug }) {
       <section className="product-details">
         <p className="eyebrow">PASTEL DOLLY / DROP 001</p><h1>{product.name}</h1><div className="product-price-stack">{product.price.normal && <s>{formatPrice(product.price.normal)}</s>}<p className="product-price">{formatPrice(product.price.launch)}</p><p className="opening-price">PRECIO DE APERTURA</p></div>
         <div className="product-option"><p>COLOR: <b>{colorId ? variant.colorName : 'SELECCIONA UN COLOR'}</b></p><div className="swatches">{product.variants.map((item) => <button title={item.colorName} aria-label={`Color ${item.colorName}`} className={item.colorId === colorId ? 'selected' : ''} onClick={() => changeColor(item.colorId)} style={{ '--swatch': item.hex }} key={item.colorId} />)}</div></div>
-        <div className="product-option"><div className="option-row"><p>TALLA</p><details className="size-guide"><summary>GUÍA DE TALLAS</summary><p>Las medidas exactas serán publicadas al confirmar la guía del proveedor. Para ayuda inmediata, contáctanos por WhatsApp.</p></details></div><div className="sizes">{Object.keys(variant.sizes).map((item) => { const stock = getVariantStock(product.id, variant.colorId, item); return <button className={item === size ? 'selected' : ''} disabled={!inventoryReady || stock < 1} onClick={() => setSize(item)} key={item}>{item}</button> })}</div></div>
-        <p className="stock-message">{!inventoryReady ? 'CARGANDO DISPONIBILIDAD' : !colorId ? 'SELECCIONA UN COLOR' : !size ? 'SELECCIONA UNA TALLA' : selectedStock < 1 ? 'ESTA TALLA YA NO ESTÁ DISPONIBLE' : selectedStock <= 2 ? `ÚLTIMAS ${selectedStock} UNIDADES` : ''}</p>
-        <div className="mobile-add"><button className="add-button" disabled={!inventoryReady || !colorId || !size || selectedStock < 1} onClick={() => addToCart(product, variant, size)}>{buttonLabel}</button></div>
+        <div className="product-option"><div className="option-row"><p>TALLA</p><details className="size-guide"><summary>GUÍA DE TALLAS</summary><p>Las medidas exactas serán publicadas al confirmar la guía del proveedor. Para ayuda inmediata, contáctanos por WhatsApp.</p></details></div><div className="sizes">{Object.keys(variant.sizes).map((item) => { const stock = getVariantStock(product.id, variant.colorId, item); return <button className={item === size ? 'selected' : ''} disabled={!inventoryReady || stock === 0} onClick={() => setSize(item)} key={item}>{item}</button> })}</div></div>
+        <p className="stock-message">{!inventoryReady ? inventoryError || 'CARGANDO DISPONIBILIDAD' : !colorId ? 'SELECCIONA UN COLOR' : !size ? 'SELECCIONA UNA TALLA' : selectedStock === undefined ? 'NO PUDIMOS ENCONTRAR LA DISPONIBILIDAD DE ESTA TALLA' : selectedStock === 0 ? 'ESTA TALLA YA NO ESTÁ DISPONIBLE' : selectedStock >= 1 && selectedStock <= 2 ? `ÚLTIMAS ${selectedStock} UNIDADES` : ''}</p>
+        <div className="mobile-add"><button className="add-button" disabled={!inventoryReady || !colorId || !size || selectedStock === 0} onClick={() => addToCart(product, variant, size)}>{buttonLabel}</button></div>
         {set && <div className="set-action"><p className="eyebrow">COMPLETA EL LOOK</p><p>{set.name}</p><a className="text-link" href={`/sets/${set.slug}`}>COMPRAR EL SET <Icon name="arrow-up-right" /></a></div>}
         <div className="product-copy"><dl><div><dt>DESCRIPCIÓN</dt><dd>{product.description}</dd></div><div><dt>ENVÍO</dt><dd>Gratis en todo Grecia. Fuera de Grecia, el costo se confirma por WhatsApp.</dd></div></dl></div>
       </section>
