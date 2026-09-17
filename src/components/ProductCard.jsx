@@ -12,7 +12,7 @@ export default function ProductCard({ product, selectedColor }) {
   return <article className="product-card">
     <a className="product-card__main-link" href={href} onClick={event => handleInternalNavigation(event, href)}>
       <div className={`product-card__image ${!front ? 'product-card__image--pending' : ''}`}>
-        {front ? <><img src={front} alt={`${product.name} ${preview.colorName}`} loading="lazy" /><img className="product-card__hover" src={back ?? front} alt="" loading="lazy" /></> : <span className="pending-image">IMAGEN<br />PRÓXIMAMENTE</span>}
+        {front ? <><img src={front} alt={`${product.name} ${preview.colorName} KREA ONE vista frontal`} loading="lazy" /><img className="product-card__hover" src={back ?? front} alt="" loading="lazy" /></> : <span className="pending-image">IMAGEN<br />PRÓXIMAMENTE</span>}
         <b>{product.badge}</b>
       </div>
       <div className="product-card__info"><div><h3>{product.name}</h3><div className="price-stack">{product.price.normal && <s>{formatPrice(product.price.normal)}</s>}<strong>{formatPrice(product.price.launch)}</strong><small>PRECIO DE APERTURA</small></div></div></div>
