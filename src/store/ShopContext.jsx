@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js'
 import { getProductById } from '../data/content.js'
-import { lineKey, stockKey } from './inventory.js'
+import { initialStock, lineKey, stockKey } from './inventory.js'
 
 const ShopContext = createContext(null)
 const CART_STORAGE_KEY = 'krea-cart-v4'
@@ -41,8 +41,11 @@ export function ShopProvider({ children }) {
 
   const refreshInventory = useCallback(async () => {
     if (!isSupabaseConfigured || !supabase) {
-      setInventoryReady(false)
-      setInventoryError('No pudimos cargar la disponibilidad en este momento.')
+      // GitHub Pages can render before its Supabase build variables are configured.
+      // Keep the known central inventory usable instead of disabling every size.
+      setInventory(initialStock)
+      setInventoryReady(true)
+      setInventoryError('')
       return
     }
 
