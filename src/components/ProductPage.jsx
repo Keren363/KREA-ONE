@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { formatPrice, getProduct, getProductById, sets } from '../data/content'
+import { formatPrice, getPriceDetails, getProduct, getProductById, sets } from '../data/content'
 import { useShop } from '../store/ShopContext'
 import ProductCard from './ProductCard'
 import Icon from './Icon'
@@ -18,6 +18,7 @@ export default function ProductPage({ slug }) {
   const complement = product.complement && getProductById(product.complement)
   const set = product.set && sets.find((item) => item.id === product.set)
   const selectedStock = size ? getVariantStock(product.id, variant.colorId, size) : null
+  const price = getPriceDetails(product.price)
   const changeColor = (next) => { setColorId(next); setSize(null); setImageIndex(0) }
   const buttonLabel = !inventoryReady ? inventoryError ? 'DISPONIBILIDAD NO DISPONIBLE' : 'CARGANDO DISPONIBILIDAD' : !colorId ? 'SELECCIONA COLOR' : !size ? 'SELECCIONA TALLA' : selectedStock === 0 ? 'AGOTADO' : 'AGREGAR AL CARRITO'
 
@@ -28,7 +29,7 @@ export default function ProductPage({ slug }) {
         {gallery.length ? <><img src={gallery[imageIndex]} alt={`${product.name} ${variant.colorName} KREA ONE vista ${imageIndex === 0 ? 'frontal' : 'posterior'}`} /><p className="gallery-count">{imageIndex + 1} / {gallery.length}</p><div className="gallery-dots">{gallery.map((_, index) => <button className={index === imageIndex ? 'active' : ''} onClick={() => setImageIndex(index)} aria-label={`Ver imagen ${index + 1}`} key={index} />)}</div><div className="gallery-thumbs">{gallery.map((src, index) => <button onClick={() => setImageIndex(index)} className={index === imageIndex ? 'active' : ''} key={src}><img src={src} alt="" /></button>)}</div></> : <p>FOTOGRAFÍA DE PRODUCTO<br />PRÓXIMAMENTE</p>}
       </div>
       <section className="product-details">
-        <p className="eyebrow">PASTEL DOLLY / DROP 001</p><h1>{product.name}</h1><div className="product-price-stack">{product.price.normal && <s>{formatPrice(product.price.normal)}</s>}<p className="product-price">{formatPrice(product.price.launch)}</p><p className="opening-price">PRECIO DE APERTURA</p></div>
+        <p className="eyebrow">PASTEL DOLLY / DROP 001</p><h1>{product.name}</h1><div className="product-price-stack">{price.discountPercent > 0 && <s>{formatPrice(price.original)}</s>}<p className="product-price">{formatPrice(price.final)}</p>{price.discountPercent > 0 && <p className="opening-price">{price.discountPercent}% OFF</p>}</div>
         <div className="product-option"><p>COLOR: <b>{colorId ? variant.colorName : 'SELECCIONA UN COLOR'}</b></p><div className="swatches">{product.variants.map((item) => <button title={item.colorName} aria-label={`Color ${item.colorName}`} className={item.colorId === colorId ? 'selected' : ''} onClick={() => changeColor(item.colorId)} style={{ '--swatch': item.hex }} key={item.colorId} />)}</div></div>
         <div className="product-option"><div className="option-row"><p>TALLA</p><details className="size-guide"><summary>GUÍA DE TALLAS</summary><p>Las medidas exactas serán publicadas al confirmar la guía del proveedor. Para ayuda inmediata, contáctanos por WhatsApp.</p></details></div><div className="sizes">{Object.keys(variant.sizes).map((item) => { const stock = getVariantStock(product.id, variant.colorId, item); return <button className={item === size ? 'selected' : ''} disabled={!inventoryReady || stock === 0} onClick={() => setSize(item)} key={item}>{item}</button> })}</div></div>
         <p className="stock-message">{!inventoryReady ? inventoryError || 'CARGANDO DISPONIBILIDAD' : !colorId ? 'SELECCIONA UN COLOR' : !size ? 'SELECCIONA UNA TALLA' : selectedStock === undefined ? 'NO PUDIMOS ENCONTRAR LA DISPONIBILIDAD DE ESTA TALLA' : selectedStock === 0 ? 'ESTA TALLA YA NO ESTÁ DISPONIBLE' : selectedStock >= 1 && selectedStock <= 2 ? `ÚLTIMAS ${selectedStock} UNIDADES` : ''}</p>

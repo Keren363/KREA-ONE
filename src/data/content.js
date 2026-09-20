@@ -3,6 +3,17 @@ const asset = file => new URL(`../../images/${file}`, import.meta.url).href
 // Centro de configuración comercial. Edita aquí precios, stock, fotos, colores y ciudad.
 export const shopConfig = { freeShippingCanton: 'Grecia', currency: 'CRC' }
 export const formatPrice = price => price == null ? 'PRECIO PRÓXIMAMENTE' : `₡${String(Math.round(Number(price))).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`
+export const GLOBAL_DISCOUNT_PERCENT = 17
+export const roundToNearestHundred = price => Math.round(Number(price) / 100) * 100
+export const getDiscountedPrice = currentPrice => {
+  if (currentPrice == null) return currentPrice
+  if (GLOBAL_DISCOUNT_PERCENT === 0) return currentPrice
+  return roundToNearestHundred(Number(currentPrice) * (1 - GLOBAL_DISCOUNT_PERCENT / 100))
+}
+export const getPriceDetails = price => {
+  const original = price?.launch ?? null
+  return { original, final: getDiscountedPrice(original), discountPercent: GLOBAL_DISCOUNT_PERCENT }
+}
 export const getShipping = canton => canton.trim().toLocaleLowerCase('es-CR') === shopConfig.freeShippingCanton.toLocaleLowerCase('es-CR') ? { label: 'GRATIS EN GRECIA', detail: 'Envío gratuito en todo Grecia.', isFree: true } : { label: 'POR CALCULAR SEGÚN UBICACIÓN', detail: 'El costo de envío será confirmado por WhatsApp según tu ubicación.', isFree: false }
 export const categories = [{ id: 'shorts', label: 'Shorts' }, { id: 'sports-bras', label: 'Sports Bras' }, { id: 'leggings', label: 'Leggings' }, { id: 'tops', label: 'Tops' }, { id: 'one-pieces', label: 'One Pieces' }, { id: 'capris', label: 'Capris' }]
 // Los IDs se usan para stock y carrito; los nombres visibles no son claves de negocio.
