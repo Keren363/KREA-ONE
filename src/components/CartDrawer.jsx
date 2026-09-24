@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
-import { products, sets, formatPrice, getDiscountedPrice, getProductById, getShipping } from '../data/content'
+import { products, sets, formatPrice, getPriceDetails, getProductById, getShipping } from '../data/content'
 import { whatsappUrl } from '../data/config'
 import { useShop } from '../store/ShopContext'
 import { buildWhatsAppMessage, createOrderId } from '../utils/order'
 const emptyCustomer = { name: '', phone: '', province: '', city: '', address: '', notes: '' }
 
-function cartRows(cart, lineKey) { return cart.map(line => { if (line.type === 'set') { const set = sets.find(item => item.id === line.setId); const items = line.items.map(item => ({ ...item, product: getProductById(item.productId) })); const variant = items[0]?.product.variants.find(item => item.colorId === line.colorId); return { ...line, key: lineKey(line), name: set?.name ?? 'Set', image: variant?.images[0], items, unitPrice: set ? getDiscountedPrice(set.price.launch) : null, colorLabel: variant?.colorName ?? line.colorId } } const product = products.find(item => item.id === line.productId); const variant = product?.variants.find(item => item.colorId === line.colorId); return { ...line, key: lineKey(line), name: product?.name ?? 'Producto', image: variant?.images[0], product, variant, unitPrice: product ? getDiscountedPrice(product.price.launch) : null, colorLabel: variant?.colorName ?? line.colorId } }).filter(Boolean) }
+function cartRows(cart, lineKey) { return cart.map(line => { if (line.type === 'set') { const set = sets.find(item => item.id === line.setId); const items = line.items.map(item => ({ ...item, product: getProductById(item.productId) })); const variant = items[0]?.product.variants.find(item => item.colorId === line.colorId); return { ...line, key: lineKey(line), name: set?.name ?? 'Set', image: variant?.images[0], items, unitPrice: set ? getPriceDetails(set.price).final : null, colorLabel: variant?.colorName ?? line.colorId } } const product = products.find(item => item.id === line.productId); const variant = product?.variants.find(item => item.colorId === line.colorId); return { ...line, key: lineKey(line), name: product?.name ?? 'Producto', image: variant?.images[0], product, variant, unitPrice: product ? getPriceDetails(product.price).final : null, colorLabel: variant?.colorName ?? line.colorId } }).filter(Boolean) }
 
 export default function CartDrawer() {
   const { cart, updateQuantity, removeLine, clearCart, isCartOpen, setCartOpen, lineKey, notice, setNotice } = useShop(); const [showForm, setShowForm] = useState(false); const [customer, setCustomer] = useState(emptyCustomer); const [error, setError] = useState('')

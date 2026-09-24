@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js'
-import { getDiscountedPrice, getProductById } from '../data/content.js'
+import { getPriceDetails, getProductById } from '../data/content.js'
 import { initialStock, lineKey, stockKey } from './inventory.js'
 
 const ShopContext = createContext(null)
@@ -131,7 +131,7 @@ export function ShopProvider({ children }) {
       colorName: variant.colorName,
       size,
       image: variant.images[0],
-      price: getDiscountedPrice(product.price.launch),
+      price: getPriceDetails(product.price).final,
       quantity: 1,
     }
     const key = lineKey(line)
@@ -172,7 +172,7 @@ export function ShopProvider({ children }) {
       colorId: color.colorId,
       colorName: color.colorName,
       image: color.images[0],
-      price: getDiscountedPrice(set.price.launch),
+      price: getPriceDetails(set.price).final,
       quantity: 1,
       items: set.items.map((productId) => {
         const product = getProductById(productId)
